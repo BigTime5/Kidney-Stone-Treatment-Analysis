@@ -357,7 +357,7 @@ print(f"Large stones: Treatment A is better by {results['large_diff']:+.1%}")
 
 ### 1. Simpson's Paradox Demonstration
 
-![Simpson's Paradox](output/simpsons_paradox_focused.png)<img width="1484" height="1178" alt="image" src="https://github.com/user-attachments/assets/6411a5c7-61cd-448a-99d1-8959bbeb2036" />
+<img width="1484" height="1178" alt="image" src="https://github.com/user-attachments/assets/6411a5c7-61cd-448a-99d1-8959bbeb2036" />
 
 
 This visualization clearly shows:
@@ -367,7 +367,8 @@ This visualization clearly shows:
 
 ### 2. Model Comparison Forest Plot
 
-![Forest Plot](output/forest_plot.png)
+<img width="1184" height="784" alt="image" src="https://github.com/user-attachments/assets/110d3e2a-717d-4a56-8e6a-24cff672f9a9" />
+
 
 Odds ratio comparison:
 - Unadjusted model: OR = 1.34 (favors Treatment B)
@@ -376,19 +377,12 @@ Odds ratio comparison:
 
 ### 3. Predicted Probability Heatmap
 
-![Probability Heatmap](output/probability_heatmap.png)
+<img width="1581" height="1178" alt="image" src="https://github.com/user-attachments/assets/8897becd-6056-4ada-b69c-e5ba4e6759b4" />
+
 
 Shows predicted success rates for all treatment-stone size combinations:
 - Highest: Treatment A + Small stones (90.8%)
 - Lowest: Treatment B + Large stones (66.3%)
-
-### 4. Patient Distribution Analysis
-
-![Patient Distribution](output/patient_distribution.png)
-
-Reveals selection bias:
-- Treatment A: Predominantly large stones (75% of cases)
-- Treatment B: Predominantly small stones (77% of cases)
 
 ---
 
