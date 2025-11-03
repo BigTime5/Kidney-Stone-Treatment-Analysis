@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidney Stone Treatment Analysis: Exploring Simpson's Paradox</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #374151;
+        }
+        
+        .medical-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin: 20px 0;
+        }
+        
+        .equation {
+            font-family: 'Courier New', monospace;
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .highlight-box {
+            border-left: 4px solid #10b981;
+            background: #ecfdf5;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .warning-box {
+            border-left: 4px solid #f59e0b;
+            background: #fffbeb;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        table {
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .odds-ratio {
+            font-weight: 600;
+            color: #059669;
+        }
+        
+        .p-value {
+            font-weight: 500;
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, #3b82f6, #10b981);
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="medical-gradient text-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <h1 class="text-4xl font-bold mb-4">
+                <i class="fas fa-microscope mr-3"></i>
+                Kidney Stone Treatment Analysis: Exploring Simpson's Paradox
+            </h1>
+            <p class="text-xl opacity-90">A Statistical Investigation into Treatment Effectiveness and Confounding Variables</p>
+            <div class="mt-6 text-sm opacity-80">
+                <i class="fas fa-calendar-alt mr-2"></i>Based on 1986 British Medical Journal Research
+                <span class="mx-4">•</span>
+                <i class="fas fa-users mr-2"></i>700 Patients Analyzed
+                <span class="mx-4">•</span>
+                <i class="fas fa-chart-line mr-2"></i>Logistic Regression Analysis
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        
+        <!-- Executive Summary -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-clipboard-check text-blue-600 mr-3"></i>
+                Executive Summary
+            </h2>
+            
+            <div class="highlight-box">
+                <h3 class="text-xl font-semibold text-green-800 mb-3">Key Findings</h3>
+                <ul class="space-y-2">
+                    <li><strong>Simpson's Paradox Demonstrated:</strong> Treatment B appears superior overall (83.1% vs 78.0% success rate), but Treatment A is actually more effective in both stone size subgroups.</li>
+                    <li><strong>Treatment Recommendation:</strong> Treatment A (open surgery) is more effective after controlling for stone size, with adjusted odds ratio of 1.72 (95% CI: 1.07-2.76, p=0.024).</li>
+                    <li><strong>Clinical Implication:</strong> Patient selection bias masked the true treatment effectiveness - larger stones were predominantly treated with Treatment A.</li>
+                </ul>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mt-6">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                    <h4 class="font-semibold text-blue-800">Overall Success Rates</h4>
+                    <p class="text-2xl font-bold text-blue-600">Treatment A: 78.0%</p>
+                    <p class="text-2xl font-bold text-green-600">Treatment B: 83.1%</p>
+                    <p class="text-sm text-gray-600 mt-2">Before controlling for stone size</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                    <h4 class="font-semibold text-green-800">Adjusted Effect</h4>
+                    <p class="text-2xl font-bold text-green-600">OR: 1.72</p>
+                    <p class="text-sm text-gray-600">95% CI: 1.07-2.76</p>
+                    <p class="text-sm text-gray-600 mt-2">Treatment A superior when adjusted</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                    <h4 class="font-semibold text-purple-800">Statistical Significance</h4>
+                    <p class="text-2xl font-bold text-purple-600">p = 0.024</p>
+                    <p class="text-sm text-gray-600">Statistically significant</p>
+                    <p class="text-sm text-gray-600 mt-2">Strong evidence for Treatment A</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Introduction -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-book-open text-blue-600 mr-3"></i>
+                Introduction
+            </h2>
+            
+            <div class="prose prose-lg max-w-none">
+                <p class="mb-4">In 1986, a groundbreaking study published in <em>The British Medical Journal</em> compared two surgical approaches for kidney stone removal, revealing one of the most famous examples of Simpson's Paradox in medical literature. This analysis examines 700 patients treated with either:</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 my-6">
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">
+                            <i class="fas fa-scalpel mr-2"></i>Treatment A: Open Surgery
+                        </h3>
+                        <ul class="text-gray-700">
+                            <li>• More invasive procedure</li>
+                            <li>• Direct surgical access</li>
+                            <li>• Higher surgical risk</li>
+                            <li>• Often used for complex cases</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                        <h3 class="text-xl font-semibold text-green-800 mb-3">
+                            <i class="fas fa-syringe mr-2"></i>Treatment B: Percutaneous Nephrolithotomy
+                        </h3>
+                        <ul class="text-gray-700">
+                            <li>• Less invasive procedure</li>
+                            <li>• Minimally invasive access</li>
+                            <li>• Lower surgical risk</li>
+                            <li>• Preferred for smaller stones</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <h3 class="text-lg font-semibold text-amber-800 mb-2">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Simpson's Paradox
+                    </h3>
+                    <p>Simpson's Paradox occurs when a trend appears in different groups of data but disappears or reverses when these groups are combined. This phenomenon highlights the critical importance of controlling for confounding variables in statistical analysis.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Dataset Overview -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-database text-blue-600 mr-3"></i>
+                Dataset Overview
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Data Characteristics</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <table class="w-full">
+                            <tr><td class="font-semibold">Total Patients:</td><td>700</td></tr>
+                            <tr><td class="font-semibold">Study Period:</td><td>1986</td></tr>
+                            <tr><td class="font-semibold">Publication:</td><td>British Medical Journal</td></tr>
+                            <tr><td class="font-semibold">Data Quality:</td><td>Complete, no missing values</td></tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Variable Definitions</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <table class="w-full">
+                            <thead>
+                                <tr><th>Variable</th><th>Type</th><th>Values</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>treatment</code></td><td>Categorical</td><td>A (Open Surgery), B (Percutaneous)</td></tr>
+                                <tr><td><code>stone_size</code></td><td>Categorical</td><td>small, large</td></tr>
+                                <tr><td><code>success</code></td><td>Binary</td><td>1 (Success), 0 (Failure)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Patient Distribution</h3>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                        <div class="text-2xl font-bold text-blue-600">350</div>
+                        <div class="text-sm text-gray-600">Treatment A Patients</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                        <div class="text-2xl font-bold text-green-600">350</div>
+                        <div class="text-sm text-gray-600">Treatment B Patients</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                        <div class="text-2xl font-bold text-purple-600">357</div>
+                        <div class="text-sm text-gray-600">Small Stones</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                        <div class="text-2xl font-bold text-red-600">343</div>
+                        <div class="text-sm text-gray-600">Large Stones</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Exploratory Data Analysis -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-chart-bar text-blue-600 mr-3"></i>
+                Exploratory Data Analysis
+            </h2>
+            
+            <!-- Overall Success Rates -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">4.1 Overall Success Rates</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div style="height: 300px;">
+                        <canvas id="overallChart"></canvas>
+                    </div>
+                </div>
+                <p class="mt-4 text-gray-700">At first glance, Treatment B appears more effective with an 83.1% success rate compared to Treatment A's 78.0% success rate. This 5.1 percentage point difference suggests Treatment B should be preferred.</p>
+            </div>
+            
+            <!-- Success Rates by Stone Size -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">4.2 Success Rates by Stone Size</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div style="height: 350px;">
+                        <canvas id="subgroupChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-semibold text-blue-800 mb-2">Small Stones</h4>
+                        <p><strong>Treatment A:</strong> 93.1% (81/87 patients)</p>
+                        <p><strong>Treatment B:</strong> 86.9% (234/270 patients)</p>
+                        <p class="text-sm text-blue-700 mt-2">Treatment A is 6.2 points higher</p>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                        <h4 class="font-semibold text-green-800 mb-2">Large Stones</h4>
+                        <p><strong>Treatment A:</strong> 73.0% (192/263 patients)</p>
+                        <p><strong>Treatment B:</strong> 69.0% (55/80 patients)</p>
+                        <p class="text-sm text-green-700 mt-2">Treatment A is 4.0 points higher</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Simpson's Paradox Revealed -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">4.3 Simpson's Paradox Revealed</h3>
+                
+                <div class="warning-box">
+                    <h4 class="text-lg font-semibold text-amber-800 mb-3">
+                        <i class="fas fa-magic mr-2"></i>The Paradox Unveiled
+                    </h4>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-red-600">Overall Data</div>
+                            <div class="text-sm">Treatment B > Treatment A</div>
+                            <div class="text-xs text-gray-600">83.1% vs 78.0%</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-blue-600">Small Stones</div>
+                            <div class="text-sm">Treatment A > Treatment B</div>
+                            <div class="text-xs text-gray-600">93.1% vs 86.9%</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-green-600">Large Stones</div>
+                            <div class="text-sm">Treatment A > Treatment B</div>
+                            <div class="text-xs text-gray-600">73.0% vs 69.0%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4 class="text-lg font-semibold mt-6 mb-3">Why Does This Happen?</h4>
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <p class="mb-4">The paradox occurs due to <strong>selection bias</strong> in treatment assignment:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Treatment A patients:</strong> 263/350 (75.1%) had large stones - severe cases</li>
+                        <li><strong>Treatment B patients:</strong> 80/350 (22.9%) had large stones - mild cases</li>
+                        <li>Since large stones have lower success rates regardless of treatment, Treatment A's overall rate is dragged down</li>
+                        <li>Treatment B benefits from treating more small stones, which have naturally higher success rates</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Logistic Regression Analysis -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-calculator text-blue-600 mr-3"></i>
+                Logistic Regression Analysis
+            </h2>
+            
+            <!-- Model 1: Treatment Only -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">5.1 Model 1: Treatment Only (Unadjusted)</h3>
+                <div class="equation mb-4">success ~ treatment</div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Coefficient</th>
+                                <th>Odds Ratio</th>
+                                <th>95% CI</th>
+                                <th>P-value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Intercept (Treatment A)</td>
+                                <td>1.273</td>
+                                <td>3.57</td>
+                                <td>(2.44 - 5.22)</td>
+                                <td>&lt; 0.001</td>
+                            </tr>
+                            <tr class="bg-red-50">
+                                <td>Treatment B</td>
+                                <td>0.351</td>
+                                <td class="odds-ratio">1.42</td>
+                                <td>(0.92 - 2.19)</td>
+                                <td class="p-value">0.115</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-4 text-gray-700"><strong>Interpretation:</strong> Treatment B appears 42% more likely to succeed, but this is not statistically significant (p=0.115) and confounded by stone size.</p>
+            </div>
+            
+            <!-- Model 2: Stone Size Only -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">5.2 Model 2: Stone Size Only</h3>
+                <div class="equation mb-4">success ~ stone_size</div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Coefficient</th>
+                                <th>Odds Ratio</th>
+                                <th>95% CI</th>
+                                <th>P-value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Intercept (Large stones)</td>
+                                <td>0.847</td>
+                                <td>2.33</td>
+                                <td>(1.67 - 3.26)</td>
+                                <td>&lt; 0.001</td>
+                            </tr>
+                            <tr class="bg-green-50">
+                                <td>Small stones</td>
+                                <td>1.021</td>
+                                <td class="odds-ratio">2.78</td>
+                                <td>(1.78 - 4.34)</td>
+                                <td class="p-value">&lt; 0.001</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-4 text-gray-700"><strong>Interpretation:</strong> Small stones are 2.78 times more likely to be treated successfully than large stones, highly significant (p&lt;0.001).</p>
+            </div>
+            
+            <!-- Model 3: Full Model -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">5.3 Model 3: Full Model (Adjusted for Stone Size)</h3>
+                <div class="equation mb-4">success ~ treatment + stone_size</div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Coefficient</th>
+                                <th>Odds Ratio</th>
+                                <th>95% CI</th>
+                                <th>P-value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Intercept (Treatment A, Large)</td>
+                                <td>0.970</td>
+                                <td>2.64</td>
+                                <td>(1.80 - 3.88)</td>
+                                <td>&lt; 0.001</td>
+                            </tr>
+                            <tr class="bg-blue-50">
+                                <td>Treatment B</td>
+                                <td>-0.542</td>
+                                <td class="odds-ratio text-red-600">0.58</td>
+                                <td>(0.36 - 0.93)</td>
+                                <td class="p-value">0.024</td>
+                            </tr>
+                            <tr class="bg-green-50">
+                                <td>Small stones</td>
+                                <td>1.021</td>
+                                <td class="odds-ratio">2.78</td>
+                                <td>(1.78 - 4.34)</td>
+                                <td class="p-value">&lt; 0.001</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="highlight-box mt-4">
+                    <h4 class="font-semibold text-green-800 mb-2">Key Finding</h4>
+                    <p><strong>Treatment A is superior!</strong> After controlling for stone size, Treatment A has 1.72 times higher odds of success (1/0.58 = 1.72) compared to Treatment B, and this difference is statistically significant (p=0.024).</p>
+                </div>
+            </div>
+            
+            <!-- Model Comparison -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">5.4 Model Comparison</h3>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div style="height: 300px;">
+                        <canvas id="forestPlot"></canvas>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-red-500">
+                        <h4 class="font-semibold text-red-800">Model 1 (Unadjusted)</h4>
+                        <p class="text-sm">AIC: 825.4</p>
+                        <p class="text-sm">Treatment B favored</p>
+                        <p class="text-sm text-red-600">Confounded result</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-yellow-500">
+                        <h4 class="font-semibold text-yellow-800">Model 2 (Stone Size)</h4>
+                        <p class="text-sm">AIC: 812.9</p>
+                        <p class="text-sm">Strong predictor</p>
+                        <p class="text-sm text-yellow-600">Missing treatment effect</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+                        <h4 class="font-semibold text-green-800">Model 3 (Full)</h4>
+                        <p class="text-sm">AIC: 807.7</p>
+                        <p class="text-sm">Best fit</p>
+                        <p class="text-sm text-green-600">True treatment effect</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Statistical Findings Summary -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-clipboard-list text-blue-600 mr-3"></i>
+                Statistical Findings Summary
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Raw Data Comparison</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <ul class="space-y-2">
+                            <li><strong>Overall success rates:</strong> Treatment B (83.1%) vs Treatment A (78.0%)</li>
+                            <li><strong>Small stones:</strong> Treatment A (93.1%) vs Treatment B (86.9%)</li>
+                            <li><strong>Large stones:</strong> Treatment A (73.0%) vs Treatment B (69.0%)</li>
+                            <li><strong>Sample sizes:</strong> Each treatment: 350 patients</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Adjusted Analysis Results</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <ul class="space-y-2">
+                            <li><strong>Adjusted OR for Treatment A:</strong> 1.72 (95% CI: 1.07-2.76)</li>
+                            <li><strong>Statistical significance:</strong> p = 0.024</li>
+                            <li><strong>Stone size effect:</strong> OR = 2.78 (95% CI: 1.78-4.34)</li>
+                            <li><strong>Model fit:</strong> AIC = 807.7 (best model)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box mt-6">
+                <h3 class="text-lg font-semibold text-green-800 mb-3">
+                    <i class="fas fa-check-circle mr-2"></i>Definitive Statistical Conclusion
+                </h3>
+                <p class="text-lg"><strong>Treatment A (open surgery) is statistically significantly more effective than Treatment B (percutaneous nephrolithotomy) when controlling for kidney stone size.</strong></p>
+                <p class="mt-2">The 72% increase in odds of success (OR = 1.72, p = 0.024) represents a clinically meaningful and statistically robust treatment advantage.</p>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Clinical Implications -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-stethoscope text-blue-600 mr-3"></i>
+                Clinical Implications
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Treatment Recommendations</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-semibold text-blue-800">Small Stones</h4>
+                            <p class="text-sm">Treatment A: 93.1% success rate</p>
+                            <p class="text-sm">Treatment B: 86.9% success rate</p>
+                            <p class="text-xs text-blue-700 mt-1">6.2 percentage point advantage for Treatment A</p>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-semibold text-green-800">Large Stones</h4>
+                            <p class="text-sm">Treatment A: 73.0% success rate</p>
+                            <p class="text-sm">Treatment B: 69.0% success rate</p>
+                            <p class="text-xs text-green-700 mt-1">4.0 percentage point advantage for Treatment A</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Clinical Decision Framework</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <ol class="list-decimal list-inside space-y-3">
+                            <li><strong>Assess stone characteristics:</strong> Size is a critical prognostic factor</li>
+                            <li><strong>Consider treatment efficacy:</strong> Treatment A is more effective for both stone sizes</li>
+                            <li><strong>Evaluate patient factors:</strong> Surgical risk tolerance, comorbidities</li>
+                            <li><strong>Balance effectiveness vs. invasiveness:</strong> Treatment A more effective but more invasive</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box mt-6">
+                <h3 class="text-lg font-semibold text-amber-800 mb-2">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Important Considerations
+                </h3>
+                <ul class="space-y-1">
+                    <li>• This analysis demonstrates efficacy but doesn't account for safety, complications, or patient preferences</li>
+                    <li>• Treatment selection should consider individual patient characteristics beyond stone size</li>
+                    <li>• The 1986 data may not reflect current surgical techniques and outcomes</li>
+                    <li>• Modern clinical decision-making should incorporate updated evidence and guidelines</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Conclusions -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-flag-checkered text-blue-600 mr-3"></i>
+                Conclusions
+            </h2>
+            
+            <div class="grid md:grid-cols-1 gap-6">
+                <div class="highlight-box">
+                    <h3 class="text-xl font-semibold text-green-800 mb-4">Primary Findings</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-3 mt-1"></i>
+                            <div>
+                                <strong>Treatment Effectiveness:</strong> Treatment A (open surgery) is significantly more effective than Treatment B after controlling for stone size (OR = 1.72, p = 0.024).
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-3 mt-1"></i>
+                            <div>
+                                <strong>Simpson's Paradox Confirmed:</strong> The aggregated data misleadingly suggested Treatment B was superior, while subgroup analysis reveals Treatment A's true advantage.
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-green-600 mr-3 mt-1"></i>
+                            <div>
+                                <strong>Confounding Variable Impact:</strong> Stone size was the key confounding factor, with Treatment A disproportionately treating larger, more difficult stones.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-4">Lessons for Medical Research</h3>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li><strong>Control for Confounders:</strong> Always examine potential confounding variables that may bias treatment comparisons</li>
+                        <li><strong>Subgroup Analysis:</strong> Analyze treatment effects within relevant patient subgroups</li>
+                        <li><strong>Statistical Modeling:</strong> Use appropriate statistical methods (e.g., logistic regression) to adjust for multiple factors simultaneously</li>
+                        <li><strong>Clinical Context:</strong> Consider how patient selection and treatment allocation may influence observed outcomes</li>
+                    </ol>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-4">Recommendations for Clinical Practice</h3>
+                    <div class="space-y-2">
+                        <p><strong>Primary Recommendation:</strong> Based on this analysis, Treatment A should be considered the more effective option for kidney stone removal, regardless of stone size.</p>
+                        <p><strong>Patient Counseling:</strong> Inform patients that while Treatment B is less invasive, Treatment A offers higher success rates.</p>
+                        <p><strong>Individualized Care:</strong> Treatment decisions should incorporate patient-specific factors including surgical risk, stone characteristics, and patient preferences.</p>
+                        <p><strong>Future Research:</strong> Modern comparative effectiveness studies should control for patient characteristics to avoid Simpson's Paradox.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Methodology Notes -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-cogs text-blue-600 mr-3"></i>
+                Methodology Notes
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Statistical Methods</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <ul class="space-y-2">
+                            <li><strong>Logistic Regression:</strong> Appropriate for binary outcomes (success/failure)</li>
+                            <li><strong>Odds Ratios:</strong> Measure of association between treatment and success</li>
+                            <li><strong>Confidence Intervals:</strong> 95% CIs provide uncertainty estimates</li>
+                            <li><strong>Model Selection:</strong> AIC used to compare model fit</li>
+                            <li><strong>Significance Testing:</strong> α = 0.05 threshold for statistical significance</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Study Limitations</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <ul class="space-y-2">
+                            <li><strong>Observational Data:</strong> Not randomized controlled trial</li>
+                            <li><strong>Historical Context:</strong> 1986 data may not reflect current practices</li>
+                            <li><strong>Limited Variables:</strong> Only stone size and treatment type available</li>
+                            <li><strong>Binary Outcomes:</strong> Success/failure may oversimplify clinical outcomes</li>
+                            <li><strong>Selection Bias:</strong> Treatment assignment not random</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-lg font-semibold mb-3">Interpretation of Odds Ratios</h3>
+                <div class="space-y-2 text-sm">
+                    <p><strong>OR = 1.72:</strong> Treatment A has 72% higher odds of success compared to Treatment B</p>
+                    <p><strong>95% CI (1.07-2.76):</strong> We are 95% confident the true odds ratio lies between 1.07 and 2.76</p>
+                    <p><strong>p = 0.024:</strong> Less than 2.4% probability this difference occurred by chance</p>
+                    <p><strong>Clinical Significance:</strong> A 72% increase in odds represents a substantial clinical benefit</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-100 p-6 rounded-lg mt-12">
+            <div class="text-center text-sm text-gray-600">
+                <p><strong>Data Source:</strong> British Medical Journal (1986) - Kidney Stone Treatment Study</p>
+                <p><strong>Analysis:</strong> Logistic Regression with Simpson's Paradox Investigation</p>
+                <p><strong>Report Generated:</strong> November 2025 | <strong>Sample Size:</strong> 700 Patients</p>
+                <p class="mt-2 text-xs">This analysis is for educational and research purposes. Clinical decisions should incorporate current medical evidence and individual patient factors.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Overall Success Rates Chart
+        const overallCtx = document.getElementById('overallChart').getContext('2d');
+        new Chart(overallCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Treatment A (Open Surgery)', 'Treatment B (Percutaneous)'],
+                datasets: [{
+                    label: 'Success Rate (%)',
+                    data: [78.0, 83.1],
+                    backgroundColor: ['#3B82F6', '#10B981'],
+                    borderColor: ['#1E40AF', '#059669'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Overall Success Rates by Treatment Type',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Success Rate (%)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Subgroup Analysis Chart
+        const subgroupCtx = document.getElementById('subgroupChart').getContext('2d');
+        new Chart(subgroupCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Small Stones', 'Large Stones'],
+                datasets: [
+                    {
+                        label: 'Treatment A (n=87 small, n=263 large)',
+                        data: [93.1, 73.0],
+                        backgroundColor: '#3B82F6',
+                        borderColor: '#1E40AF',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Treatment B (n=270 small, n=80 large)',
+                        data: [86.9, 69.0],
+                        backgroundColor: '#10B981',
+                        borderColor: '#059669',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Success Rates by Treatment Type and Stone Size',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Success Rate (%)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Forest Plot for Odds Ratios
+        const forestCtx = document.getElementById('forestPlot').getContext('2d');
+        new Chart(forestCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Model 1 (Unadjusted)',
+                        data: [{x: 1.42, y: 2}],
+                        backgroundColor: '#EF4444',
+                        borderColor: '#DC2626',
+                        pointRadius: 8
+                    },
+                    {
+                        label: 'Model 3 (Adjusted)',
+                        data: [{x: 0.58, y: 1}],
+                        backgroundColor: '#10B981',
+                        borderColor: '#059669',
+                        pointRadius: 8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Treatment B Odds Ratios: Unadjusted vs Adjusted',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'logarithmic',
+                        min: 0.3,
+                        max: 3,
+                        title: {
+                            display: true,
+                            text: 'Odds Ratio (Treatment B vs Treatment A)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(2);
+                            }
+                        }
+                    },
+                    y: {
+                        min: 0.5,
+                        max: 2.5,
+                        title: {
+                            display: true,
+                            text: 'Model'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                if (value === 1) return 'Adjusted';
+                                if (value === 2) return 'Unadjusted';
+                                return '';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add reference line at OR = 1
+        Chart.register({
+            id: 'referenceLine',
+            beforeDraw: function(chart) {
+                if (chart.canvas.id === 'forestPlot') {
+                    const ctx = chart.ctx;
+                    const chartArea = chart.chartArea;
+                    const xScale = chart.scales.x;
+                    const yScale = chart.scales.y;
+                    
+                    const x = xScale.getPixelForValue(1);
+                    
+                    ctx.save();
+                    ctx.strokeStyle = '#6B7280';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(x, chartArea.top);
+                    ctx.lineTo(x, chartArea.bottom);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
