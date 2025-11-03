@@ -357,7 +357,8 @@ print(f"Large stones: Treatment A is better by {results['large_diff']:+.1%}")
 
 ### 1. Simpson's Paradox Demonstration
 
-![Simpson's Paradox](output/simpsons_paradox_focused.png)
+![Simpson's Paradox](output/simpsons_paradox_focused.png)<img width="1484" height="1178" alt="image" src="https://github.com/user-attachments/assets/6411a5c7-61cd-448a-99d1-8959bbeb2036" />
+
 
 This visualization clearly shows:
 - Treatment B appears better in aggregate (82.6% vs 78.0%)
