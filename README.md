@@ -580,7 +580,7 @@ CI = exp(β ± 1.96 × SE)
 
 ## 👥 Contributors
 
-**Principal Investigator:** [Phhinidy George]
+**Principal Investigator:** [Phinidy George]
 - Data analysis and statistical modeling
 - Visualization development
 - Clinical interpretation
