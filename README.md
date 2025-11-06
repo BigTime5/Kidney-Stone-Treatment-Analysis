@@ -762,11 +762,11 @@ Potential extensions of this analysis:
 
 ## 📊 Project Metrics
 
-![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/kidney-stone-simpsons-paradox)
-![GitHub code size](https://img.shields.io/github/languages/code-size/yourusername/kidney-stone-simpsons-paradox)
-![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/kidney-stone-simpsons-paradox)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/kidney-stone-simpsons-paradox)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/kidney-stone-simpsons-paradox)
+![GitHub repo size](https://img.shields.io/github/repo-size/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub code size](https://img.shields.io/github/languages/code-size/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub last commit](https://img.shields.io/github/last-commit/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub issues](https://img.shields.io/github/issues/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
 
 ---
 
