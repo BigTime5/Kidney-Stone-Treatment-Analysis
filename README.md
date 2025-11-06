@@ -762,11 +762,11 @@ Potential extensions of this analysis:
 
 ## 📊 Project Metrics
 
-![GitHub repo size](https://img.shields.io/github/repo-size/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
-![GitHub code size](https://img.shields.io/github/languages/code-size/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
-![GitHub last commit](https://img.shields.io/github/last-commit/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
-![GitHub issues](https://img.shields.io/github/issues/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/https://github.com/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub repo size](https://img.shields.io/github/repo-size/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub code size](https://img.shields.io/github/languages/code-size/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub last commit](https://img.shields.io/github/last-commit/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub issues](https://img.shields.io/github/issues/BigTime5/Kidney-Stone-Treatment-Analysis)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/BigTime5/Kidney-Stone-Treatment-Analysis)
 
 ---
 
